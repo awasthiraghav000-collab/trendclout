@@ -1,0 +1,630 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Checkout | Trend Clout</title>
+
+  <style>
+    :root{
+      --bg:#080716;
+      --card:#17142a;
+      --text:#ffffff;
+      --muted:#c9c2d8;
+      --line:rgba(255,255,255,.16);
+      --accent:#ff8bbd;
+      --accent2:#8ddcff;
+      --green:#7CFFB2;
+      --danger:#ff6b6b;
+    }
+
+    *{margin:0;padding:0;box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    body{
+      background:
+        radial-gradient(circle at 50% -10%, rgba(255,139,189,.35), transparent 34%),
+        radial-gradient(circle at 85% 20%, rgba(141,220,255,.22), transparent 30%),
+        linear-gradient(180deg,#0b0920 0%, #080716 45%, #050510 100%);
+      color:white;
+      font-family:Arial,sans-serif;
+      min-height:100vh;
+      overflow-x:hidden;
+    }
+    a{text-decoration:none;color:inherit}
+    img{max-width:100%;display:block}
+
+    .page-transition{
+      position:fixed;
+      inset:0;
+      background:#080716;
+      z-index:9999;
+      pointer-events:none;
+      opacity:1;
+      transition:opacity .6s ease;
+    }
+    .page-transition.hide{opacity:0}
+
+    .cursor-glow{
+      position:fixed;
+      width:220px;
+      height:220px;
+      border-radius:50%;
+      background:radial-gradient(circle, rgba(255,139,189,.22), transparent 65%);
+      pointer-events:none;
+      z-index:9998;
+      transform:translate(-50%,-50%);
+      filter:blur(8px);
+    }
+
+    header{
+      position:sticky;
+      top:0;
+      z-index:99;
+      background:rgba(5,5,5,.75);
+      backdrop-filter:blur(18px);
+      border-bottom:1px solid var(--line);
+    }
+
+    nav{
+      max-width:1180px;
+      margin:auto;
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      padding:16px 18px;
+    }
+
+    .logo{
+      display:flex;
+      align-items:center;
+      gap:10px;
+      font-size:22px;
+      font-weight:1000;
+      letter-spacing:-.8px;
+    }
+
+    .logo-mark{
+      width:34px;
+      height:34px;
+      border-radius:12px;
+      background:linear-gradient(135deg,var(--accent),var(--accent2));
+      box-shadow:0 0 30px rgba(255,139,189,.5);
+    }
+
+    .nav-link{
+      border:1px solid var(--line);
+      background:rgba(255,255,255,.07);
+      color:white;
+      padding:11px 16px;
+      border-radius:999px;
+      font-weight:900;
+    }
+
+    .wrap{
+      max-width:1180px;
+      margin:auto;
+      padding:46px 18px 80px;
+    }
+
+    .head{
+      text-align:center;
+      max-width:760px;
+      margin:0 auto 34px;
+    }
+
+    .tag{
+      display:inline-block;
+      background:rgba(124,255,178,.13);
+      border:1px solid rgba(124,255,178,.45);
+      color:#caffdc;
+      padding:9px 13px;
+      border-radius:999px;
+      font-weight:900;
+      font-size:13px;
+      margin-bottom:18px;
+    }
+
+    h1{
+      font-size:clamp(38px,6vw,68px);
+      line-height:.95;
+      letter-spacing:-2.5px;
+      margin-bottom:16px;
+    }
+
+    .head p{
+      color:var(--muted);
+      line-height:1.7;
+      font-size:17px;
+    }
+
+    .checkout-grid{
+      display:grid;
+      grid-template-columns:1fr .8fr;
+      gap:24px;
+      align-items:start;
+    }
+
+    .panel{
+      background:
+        radial-gradient(circle at top right, rgba(255,139,189,.16), transparent 38%),
+        linear-gradient(180deg,rgba(255,255,255,.09),rgba(255,255,255,.035));
+      border:1px solid rgba(255,255,255,.16);
+      border-radius:34px;
+      padding:24px;
+      box-shadow:0 35px 90px rgba(0,0,0,.55);
+    }
+
+    .panel h2{
+      font-size:28px;
+      margin-bottom:18px;
+      letter-spacing:-.8px;
+    }
+
+    .cart-item{
+      display:grid;
+      grid-template-columns:86px 1fr auto;
+      gap:14px;
+      align-items:center;
+      padding:14px 0;
+      border-bottom:1px solid var(--line);
+    }
+
+    .cart-item img{
+      width:86px;
+      height:96px;
+      object-fit:contain;
+      border-radius:16px;
+      background:rgba(255,255,255,.05);
+      padding:6px;
+    }
+
+    .cart-item h3{
+      font-size:16px;
+      margin-bottom:6px;
+    }
+
+    .cart-item p{
+      color:var(--muted);
+      font-size:13px;
+      line-height:1.5;
+    }
+
+    .item-price{
+      color:var(--accent2);
+      font-weight:1000;
+      white-space:nowrap;
+    }
+
+    .empty{
+      color:var(--muted);
+      padding:18px;
+      border:1px dashed var(--line);
+      border-radius:18px;
+      text-align:center;
+    }
+
+    .total-box{
+      margin-top:20px;
+      display:grid;
+      gap:10px;
+    }
+
+    .total-row{
+      display:flex;
+      justify-content:space-between;
+      color:#e8e4ef;
+      font-weight:900;
+    }
+
+    .grand{
+      font-size:24px;
+      color:var(--accent2);
+      border-top:1px solid var(--line);
+      padding-top:14px;
+      margin-top:4px;
+    }
+
+    label{
+      display:block;
+      font-weight:900;
+      margin:13px 0 7px;
+      color:#f3efff;
+    }
+
+    input,textarea,select{
+      width:100%;
+      background:rgba(255,255,255,.06);
+      color:white;
+      border:1px solid var(--line);
+      border-radius:16px;
+      padding:15px;
+      outline:none;
+      font-size:15px;
+    }
+
+    textarea{
+      min-height:110px;
+      resize:vertical;
+    }
+
+    input:focus,textarea:focus,select:focus{
+      border-color:rgba(255,139,189,.75);
+      box-shadow:0 0 0 4px rgba(255,139,189,.12);
+    }
+
+    .payment-options{
+      display:grid;
+      gap:10px;
+      margin-top:8px;
+    }
+
+    .payment-card{
+      border:1px solid var(--line);
+      background:rgba(255,255,255,.05);
+      border-radius:18px;
+      padding:14px;
+      cursor:pointer;
+      display:flex;
+      gap:10px;
+      align-items:center;
+      font-weight:900;
+    }
+
+    .payment-card input{
+      width:auto;
+      accent-color:#ff8bbd;
+    }
+
+    .trust-grid{
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:10px;
+      margin:18px 0;
+    }
+
+    .trust{
+      background:rgba(255,255,255,.04);
+      border:1px solid var(--line);
+      padding:13px;
+      border-radius:16px;
+      font-weight:900;
+      font-size:14px;
+    }
+
+    .btn{
+      width:100%;
+      border:none;
+      background:linear-gradient(135deg,#ff8bbd,#8ddcff);
+      color:#080716;
+      padding:16px;
+      border-radius:999px;
+      font-size:16px;
+      font-weight:1000;
+      cursor:pointer;
+      transition:.3s;
+      box-shadow:0 0 34px rgba(255,139,189,.28);
+      text-align:center;
+      margin-top:16px;
+    }
+
+    .btn:hover{
+      transform:translateY(-3px);
+      box-shadow:0 0 42px rgba(255,139,189,.45);
+    }
+
+    .btn-secondary{
+      display:inline-block;
+      width:auto;
+      background:rgba(255,255,255,.08);
+      color:white;
+      border:1px solid rgba(255,255,255,.18);
+      box-shadow:none;
+      padding:12px 18px;
+      margin-top:18px;
+    }
+
+    .success{
+      display:none;
+      margin-top:16px;
+      padding:18px;
+      border-radius:18px;
+      background:rgba(34,197,94,.15);
+      border:1px solid rgba(34,197,94,.55);
+      color:#caffdc;
+      font-weight:900;
+      line-height:1.6;
+    }
+
+    .error{
+      display:none;
+      margin-top:16px;
+      padding:16px;
+      border-radius:18px;
+      background:rgba(255,107,107,.13);
+      border:1px solid rgba(255,107,107,.55);
+      color:#ffd1d1;
+      font-weight:900;
+    }
+
+    @media(max-width:850px){
+      .wrap{padding:28px 16px 60px}
+      .checkout-grid{grid-template-columns:1fr}
+      .cart-item{grid-template-columns:74px 1fr}
+      .item-price{grid-column:2}
+      .trust-grid{grid-template-columns:1fr}
+      h1{letter-spacing:-1.5px}
+    }
+  </style>
+  <script src="https://sdk.cashfree.com/js/v3/cashfree.js"></script>
+</head>
+
+<body>
+  <div class="page-transition" id="pageTransition"></div>
+  <div class="cursor-glow" id="cursorGlow"></div>
+
+  <header>
+    <nav>
+      <a href="trend_clout_premium_index.html" class="logo">
+        <span class="logo-mark"></span>
+        Trend Clout
+      </a>
+
+      <a class="nav-link" href="trend_clout_premium_index.html#shop">Continue Shopping</a>
+    </nav>
+  </header>
+
+  <main class="wrap">
+    <div class="head">
+      <div class="tag">Secure Checkout • COD Available</div>
+      <h1>Complete Your Order</h1>
+      <p>Fill your details below. For COD orders, our team will call you for confirmation before dispatch.</p>
+    </div>
+
+    <div class="checkout-grid">
+      <section class="panel">
+        <h2>Your Items</h2>
+        <div id="checkoutItems"></div>
+
+        <div class="total-box">
+          <div class="total-row">
+            <span>Subtotal</span>
+            <span id="subtotal">₹0</span>
+          </div>
+          <div class="total-row">
+            <span>Delivery</span>
+            <span id="delivery">₹0</span>
+          </div>
+          <div class="total-row grand">
+            <span>Total</span>
+            <span id="grandTotal">₹0</span>
+          </div>
+        </div>
+
+        <a class="btn btn-secondary" href="trend_clout_premium_index.html#shop">← Add More Products</a>
+      </section>
+
+      <section class="panel">
+        <h2>Customer Details</h2>
+
+        <label>Name</label>
+        <input id="customerName" placeholder="Your full name">
+
+        <label>Phone Number</label>
+        <input id="phone" placeholder="10-digit phone number">
+
+        <label>Full Address</label>
+        <textarea id="address" placeholder="House no, area, city, state"></textarea>
+
+        <label>Pincode</label>
+        <input id="pincode" placeholder="Pincode">
+
+        <label>Payment Method</label>
+        <div class="payment-options">
+          <label class="payment-card">
+  <input type="radio" name="payment" value="cod" checked>
+  Cash on Delivery
+</label>
+
+<label class="payment-card">
+  <input type="radio" name="payment" value="online">
+  UPI / Online Payment
+</label>
+        </div>
+
+        <div class="trust-grid">
+          <div class="trust">✅ COD Available</div>
+          <div class="trust">🚚 4–7 Day Delivery</div>
+          <div class="trust">🔒 Secure Checkout</div>
+          <div class="trust">📞 Confirmation Call</div>
+        </div>
+
+        <button class="btn" onclick="handleCheckout()">Place Order</button>
+
+        <div class="success" id="successMsg">
+          Order placed successfully. We will contact you for confirmation. Thank you for choosing Trend Clout.
+        </div>
+
+        <div class="error" id="errorMsg">
+          Please fill all details and add at least one product.
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <script>
+    let cart = JSON.parse(localStorage.getItem("trendCloutCart")) || [];
+
+    function renderCheckout(){
+      const box = document.getElementById("checkoutItems");
+      const subtotalBox = document.getElementById("subtotal");
+      const grandBox = document.getElementById("grandTotal");
+      const deliveryBox = document.getElementById("delivery");
+
+      box.innerHTML = "";
+      let subtotal = 0;
+
+      if(cart.length === 0){
+        box.innerHTML = "<div class='empty'>No items added yet. Go back and add a product.</div>";
+      }
+
+      cart.forEach((item)=>{
+        const itemTotal = Number(item.price) * Number(item.qty);
+        subtotal += itemTotal;
+
+        box.innerHTML += `
+          <div class="cart-item">
+            <img src="${item.img}" alt="${item.name}">
+            <div>
+              <h3>${item.name}</h3>
+              <p>Size: ${item.size} • Quantity: ${item.qty}</p>
+              <p>${item.category || "Trend Clout Product"}</p>
+            </div>
+            <div class="item-price">₹${itemTotal}</div>
+          </div>
+        `;
+      });
+
+      const delivery = subtotal > 0 ? 0 : 0;
+      subtotalBox.innerText = "₹" + subtotal;
+      deliveryBox.innerText = delivery === 0 ? "Free" : "₹" + delivery;
+      grandBox.innerText = "₹" + (subtotal + delivery);
+    }
+
+    function getPaymentMethod(){
+      const selected = document.querySelector("input[name='payment']:checked");
+      return selected ? selected.value : "Cash on Delivery";
+    }
+
+    function placeOrder(){
+      const name = document.getElementById("customerName").value.trim();
+      const phone = document.getElementById("phone").value.trim();
+      const address = document.getElementById("address").value.trim();
+      const pincode = document.getElementById("pincode").value.trim();
+      const payment = getPaymentMethod();
+
+      const errorMsg = document.getElementById("errorMsg");
+      const successMsg = document.getElementById("successMsg");
+
+      errorMsg.style.display = "none";
+      successMsg.style.display = "none";
+
+      if(!name || !phone || !address || !pincode || cart.length === 0){
+        errorMsg.style.display = "block";
+        return;
+      }
+
+      const subtotal = cart.reduce((sum,item)=>sum + Number(item.price) * Number(item.qty), 0);
+
+      const order = {
+        customerName:name,
+        phone:phone,
+        address:address,
+        pincode:pincode,
+        paymentMethod:payment,
+        items:cart,
+        total:subtotal,
+        date:new Date().toLocaleString()
+      };
+      fetch("https://formspree.io/f/mgodwgag", {
+  method: "POST",
+  headers: {
+    "Content-Type": "application/json",
+    "Accept": "application/json"
+  },
+  body: JSON.stringify(order)
+})
+.then(() => {
+  alert("Order placed successfully. We will contact you.");
+})
+.catch(() => {
+  alert("Order saved but email failed.");
+});
+
+      // Orders are stored locally for now.
+      // Later connect Formspree, Google Sheets, Cashfree, Razorpay, or backend here.
+      let orders = JSON.parse(localStorage.getItem("trendCloutOrders")) || [];
+      orders.push(order);
+      localStorage.setItem("trendCloutOrders", JSON.stringify(orders));
+
+      localStorage.removeItem("trendCloutCart");
+      cart = [];
+
+      renderCheckout();
+      successMsg.style.display = "block";
+
+      document.getElementById("customerName").value = "";
+      document.getElementById("phone").value = "";
+      document.getElementById("address").value = "";
+      document.getElementById("pincode").value = "";
+    }
+
+    window.addEventListener("load", ()=>{
+      const pageTransition = document.getElementById("pageTransition");
+      if(pageTransition){
+        pageTransition.classList.add("hide");
+      }
+    });
+
+    const cursorGlow = document.getElementById("cursorGlow");
+    document.addEventListener("mousemove", (e)=>{
+      if(cursorGlow){
+        cursorGlow.style.left = e.clientX + "px";
+        cursorGlow.style.top = e.clientY + "px";
+      }
+    });
+
+    renderCheckout();
+    async function payWithCashfree(){
+  const cart = JSON.parse(localStorage.getItem("trendCloutCart")) || [];
+
+  if(cart.length === 0){
+    alert("Cart is empty.");
+    return;
+  }
+
+  const amount = cart.reduce((sum, item) => {
+    return sum + Number(item.price) * Number(item.qty);
+  }, 0);
+
+  const name = document.getElementById("customerName").value.trim();
+  const phone = document.getElementById("phone").value.trim();
+
+  if(!name || !phone){
+    alert("Please enter name and phone number.");
+    return;
+  }
+
+  const res = await fetch("/.netlify/functions/create-order", {
+    method: "POST",
+    headers: {"Content-Type": "application/json"},
+    body: JSON.stringify({ amount, name, phone })
+  });
+
+  const data = await res.json();
+
+  const cashfree = Cashfree({ mode: "sandbox" });
+
+  cashfree.checkout({
+    paymentSessionId: data.payment_session_id,
+    redirectTarget: "_self"
+  });
+}
+function handleCheckout(){
+  const payment = document.querySelector('input[name="payment"]:checked')?.value;
+
+  if(!payment){
+    alert("Please select payment method.");
+    return;
+  }
+
+  if(payment === "cod"){
+    placeOrder();
+  }
+
+  if(payment === "online"){
+    payWithCashfree();
+  }
+}
+  </script>
+</body>
+</html>

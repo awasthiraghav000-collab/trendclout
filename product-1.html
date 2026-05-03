@@ -1,0 +1,791 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Product | Trend Clout</title>
+
+  <style>
+    :root{
+      --bg:#080716;
+      --card:#17142a;
+      --text:#ffffff;
+      --muted:#c9c2d8;
+      --line:rgba(255,255,255,.16);
+      --accent:#ff8bbd;
+      --accent2:#8ddcff;
+      --green:#7CFFB2;
+    }
+
+    *{margin:0;padding:0;box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    body{
+      background:
+        radial-gradient(circle at 50% -10%, rgba(255,139,189,.35), transparent 34%),
+        radial-gradient(circle at 85% 20%, rgba(141,220,255,.22), transparent 30%),
+        linear-gradient(180deg,#0b0920 0%, #080716 45%, #050510 100%);
+      color:white;
+      font-family:Arial,sans-serif;
+      overflow-x:hidden;
+    }
+    a{text-decoration:none;color:inherit}
+    img{max-width:100%;display:block}
+
+    .page-transition{
+      position:fixed;
+      inset:0;
+      background:#080716;
+      z-index:9999;
+      pointer-events:none;
+      opacity:1;
+      transition:opacity .6s ease;
+    }
+    .page-transition.hide{opacity:0}
+
+    .cursor-glow{
+      position:fixed;
+      width:220px;
+      height:220px;
+      border-radius:50%;
+      background:radial-gradient(circle, rgba(255,139,189,.22), transparent 65%);
+      pointer-events:none;
+      z-index:9998;
+      transform:translate(-50%,-50%);
+      filter:blur(8px);
+    }
+
+    header{
+      position:sticky;
+      top:0;
+      z-index:99;
+      background:rgba(5,5,5,.75);
+      backdrop-filter:blur(18px);
+      border-bottom:1px solid var(--line);
+    }
+
+    nav{
+      max-width:1180px;
+      margin:auto;
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      padding:16px 18px;
+    }
+
+    .logo{
+      display:flex;
+      align-items:center;
+      gap:10px;
+      font-size:22px;
+      font-weight:1000;
+      letter-spacing:-.8px;
+    }
+
+    .logo-mark{
+      width:34px;
+      height:34px;
+      border-radius:12px;
+      background:linear-gradient(135deg,var(--accent),var(--accent2));
+      box-shadow:0 0 30px rgba(255,139,189,.5);
+    }
+
+    .nav-links{
+      display:flex;
+      gap:24px;
+      color:#e8e4ef;
+      font-size:14px;
+      font-weight:900;
+    }
+
+    .cart-pill{
+      border:1px solid var(--line);
+      background:rgba(255,255,255,.07);
+      color:white;
+      padding:11px 16px;
+      border-radius:999px;
+      font-weight:900;
+      cursor:pointer;
+    }
+
+    .wrap{
+      max-width:1180px;
+      margin:auto;
+      padding:38px 18px 80px;
+    }
+
+    .back-link{
+      display:inline-block;
+      margin-bottom:22px;
+      color:#e8e4ef;
+      font-weight:900;
+    }
+
+    .product-layout{
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:28px;
+      align-items:start;
+    }
+
+    .product-image-box{
+      position:relative;
+      background:
+        radial-gradient(circle at 50% 20%, rgba(255,139,189,.25), transparent 45%),
+        linear-gradient(145deg,rgba(255,255,255,.12),rgba(255,255,255,.03));
+      border:1px solid var(--line);
+      border-radius:34px;
+      padding:14px;
+      overflow:hidden;
+      box-shadow:0 30px 90px rgba(0,0,0,.75);
+      animation:productImageEnter .8s ease both;
+    }
+
+    .product-image-box::before{
+      content:"";
+      position:absolute;
+      inset:-60px;
+      background:linear-gradient(120deg,transparent,rgba(255,255,255,.16),transparent);
+      transform:translateX(-100%) rotate(12deg);
+      animation:shineMove 4s infinite;
+    }
+
+    @keyframes shineMove{
+      0%{transform:translateX(-100%) rotate(12deg)}
+      45%,100%{transform:translateX(100%) rotate(12deg)}
+    }
+
+    @keyframes productImageEnter{
+      0%{opacity:0;transform:scale(.92) translateY(30px);filter:blur(10px)}
+      100%{opacity:1;transform:scale(1) translateY(0);filter:blur(0)}
+    }
+
+    .product-image-box img{
+      position:relative;
+      z-index:2;
+      width:100%;
+      height:520px;
+      object-fit:contain;
+      border-radius:26px;
+      filter:drop-shadow(0 35px 45px rgba(0,0,0,.75));
+      animation:productFloat 4.5s ease-in-out infinite;
+      transition:.7s ease;
+    }
+
+    .product-image-box:hover img{
+      transform:scale(1.05) rotate(-1deg);
+    }
+
+    @keyframes productFloat{
+      0%,100%{translate:0 0}
+      50%{translate:0 -12px}
+    }
+
+    .details{
+      position:sticky;
+      top:95px;
+      background:
+        radial-gradient(circle at top right, rgba(255,139,189,.18), transparent 38%),
+        linear-gradient(180deg,rgba(255,255,255,.09),rgba(255,255,255,.035));
+      border:1px solid rgba(255,255,255,.16);
+      border-radius:34px;
+      padding:28px;
+      box-shadow:0 35px 90px rgba(0,0,0,.55);
+      animation:detailsEnter .9s ease both;
+      animation-delay:.15s;
+    }
+
+    @keyframes detailsEnter{
+      0%{opacity:0;transform:translateY(35px)}
+      100%{opacity:1;transform:translateY(0)}
+    }
+
+    .tag{
+      display:inline-block;
+      background:rgba(124,255,178,.13);
+      border:1px solid rgba(124,255,178,.45);
+      color:#caffdc;
+      padding:9px 13px;
+      border-radius:999px;
+      font-weight:900;
+      font-size:13px;
+      margin-bottom:18px;
+    }
+
+    h1{
+      font-size:44px;
+      line-height:1.05;
+      letter-spacing:-1.6px;
+      margin-bottom:14px;
+    }
+
+    .price{
+      color:var(--accent2);
+      font-size:34px;
+      font-weight:1000;
+      margin-bottom:10px;
+    }
+
+    .urgency{
+      color:var(--accent);
+      font-weight:1000;
+      margin-bottom:16px;
+    }
+
+    .desc{
+      color:var(--muted);
+      line-height:1.8;
+      margin-bottom:18px;
+    }
+
+    .premium-points{
+      display:grid;
+      gap:10px;
+      margin:18px 0;
+    }
+
+    .premium-points p{
+      background:rgba(255,255,255,.045);
+      border:1px solid var(--line);
+      border-radius:16px;
+      padding:13px;
+      color:#eeeeee;
+      font-weight:900;
+    }
+
+    .option-title{
+      font-weight:1000;
+      margin:18px 0 10px;
+    }
+
+    .sizes{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+    }
+
+    .size{
+      width:54px;
+      height:46px;
+      border-radius:14px;
+      border:1px solid var(--line);
+      background:#15151b;
+      color:white;
+      font-weight:1000;
+      cursor:pointer;
+    }
+
+    .size.active{
+      background:white;
+      color:#080716;
+    }
+
+    .qty-box{
+      display:flex;
+      align-items:center;
+      gap:14px;
+      margin-bottom:18px;
+    }
+
+    .qty-box button{
+      width:42px;
+      height:42px;
+      border-radius:14px;
+      border:1px solid var(--line);
+      background:#15151b;
+      color:white;
+      font-size:22px;
+      cursor:pointer;
+    }
+
+    .button-row{
+      display:grid;
+      gap:12px;
+    }
+
+    .btn{
+      width:100%;
+      border:none;
+      background:linear-gradient(135deg,#ff8bbd,#8ddcff);
+      color:#080716;
+      padding:16px;
+      border-radius:999px;
+      font-size:16px;
+      font-weight:1000;
+      cursor:pointer;
+      transition:.3s;
+      box-shadow:0 0 34px rgba(255,139,189,.28);
+      text-align:center;
+    }
+
+    .btn:hover{
+      transform:translateY(-3px);
+      box-shadow:0 0 42px rgba(255,139,189,.45);
+    }
+
+    .btn-secondary{
+      background:rgba(255,255,255,.08);
+      color:white;
+      border:1px solid rgba(255,255,255,.18);
+      box-shadow:none;
+    }
+
+    .trust-grid{
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:10px;
+      margin-top:22px;
+    }
+
+    .trust{
+      background:rgba(255,255,255,.04);
+      border:1px solid var(--line);
+      padding:14px;
+      border-radius:18px;
+      font-weight:900;
+      color:#e8e8e8;
+    }
+
+    .section{
+      margin-top:26px;
+      background:rgba(255,255,255,.04);
+      border:1px solid var(--line);
+      padding:22px;
+      border-radius:26px;
+    }
+
+    .section h3{margin-bottom:10px}
+    .section p{color:var(--muted);line-height:1.7}
+
+    .cart-drawer{
+      position:fixed;
+      right:-430px;
+      top:0;
+      width:min(92vw,420px);
+      height:100vh;
+      background:#0b0b0f;
+      border-left:1px solid var(--line);
+      z-index:200;
+      transition:.35s;
+      padding:22px;
+      overflow:auto;
+    }
+
+    .cart-drawer.open{right:0}
+
+    .cart-head{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      margin-bottom:20px;
+    }
+
+    .close{
+      border:1px solid var(--line);
+      background:#17171d;
+      color:white;
+      border-radius:12px;
+      padding:10px 13px;
+      cursor:pointer;
+    }
+
+    .cart-item{
+      display:flex;
+      gap:12px;
+      border-bottom:1px solid var(--line);
+      padding:14px 0;
+    }
+
+    .cart-item img{
+      width:76px;
+      height:86px;
+      object-fit:cover;
+      border-radius:14px;
+    }
+
+    .cart-item p{
+      color:var(--muted);
+      font-size:13px;
+      margin-top:4px;
+    }
+
+    .remove{
+      background:transparent;
+      color:#ff7a7a;
+      border:none;
+      margin-top:8px;
+      font-weight:900;
+      cursor:pointer;
+    }
+
+    .cart-total{
+      display:flex;
+      justify-content:space-between;
+      font-size:22px;
+      font-weight:1000;
+      margin:22px 0;
+    }
+
+    @media(max-width:850px){
+      .nav-links{display:none}
+
+      .wrap{
+        padding:18px 16px 45px;
+      }
+
+      .product-layout{
+        grid-template-columns:1fr;
+        gap:12px;
+      }
+
+      .product-image-box{
+        margin-top:10px;
+      }
+
+      .product-image-box img{
+        height:360px;
+        object-position:center top;
+      }
+
+      .details{
+        position:relative;
+        top:0;
+        margin-top:0;
+        padding:22px;
+      }
+
+      h1{
+        font-size:34px;
+        letter-spacing:-1px;
+      }
+
+      .trust-grid{
+        grid-template-columns:1fr;
+    
+    }
+    .more-products-section{
+  margin-top:40px;
+}
+
+.more-products-section h2{
+  font-size:28px;
+  margin-bottom:16px;
+}
+
+#moreProducts{
+  display:flex;
+  gap:18px;
+  overflow-x:auto;
+  padding-bottom:10px;
+}
+.more-card{
+  min-width:220px;
+  text-align:center;
+  padding:12px;
+  background:transparent;
+  border:none;
+}
+
+.more-card img{
+  width:100%;
+  height:230px;
+  object-fit:contain;
+  background:transparent;
+  filter:drop-shadow(0 28px 35px rgba(0,0,0,.75));
+  transition:.5s ease;
+  animation:moreFloat 4s ease-in-out infinite;
+}
+
+.more-card:hover img{
+  transform:scale(1.08) rotate(-2deg) translateY(-8px);
+}
+
+@keyframes moreFloat{
+  0%,100%{
+    transform:translateY(0);
+  }
+  50%{
+    transform:translateY(-10px);
+  }
+}
+  </style>
+</head>
+
+<body>
+  <div class="page-transition" id="pageTransition"></div>
+  <div class="cursor-glow" id="cursorGlow"></div>
+
+  <header>
+    <nav>
+      <a href="trend_clout_premium_index.html" class="logo">
+        <span class="logo-mark"></span>
+        Trend Clout
+      </a>
+
+      <div class="nav-links">
+        <a href="trend_clout_premium_index.html#home">Home</a>
+        <a href="trend_clout_premium_index.html#shop">Shop</a>
+        <a href="trend_clout_premium_index.html#checkout">Checkout</a>
+      </div>
+
+      <button class="cart-pill" onclick="toggleCart()">Cart <span id="cartCount">0</span></button>
+    </nav>
+  </header>
+
+  <main class="wrap">
+    <a class="back-link" href="trend_clout_premium_index.html#shop">← Back to Collection</a>
+
+    <div class="product-layout">
+      <div class="product-image-box">
+        <img id="productImage" src="" alt="Product Image">
+      </div>
+
+      <div class="details">
+        <div class="tag">COD Available • 4–7 Day Delivery</div>
+
+        <h1 id="productName">Product Name</h1>
+        <div class="price" id="productPrice">₹0</div>
+
+        <p class="urgency">⚠️ Limited stock — selling fast</p>
+
+        <p class="desc" id="productDescription">
+          Premium oversized tee with high-quality print and streetwear fit.
+        </p>
+
+        <div class="premium-points">
+          <p>🔥 Premium oversized fit</p>
+          <p>🧵 High-quality long-lasting print</p>
+          <p>🚚 4–7 day delivery across India</p>
+        </div>
+
+        <div class="option-title">Select Size</div>
+        <div class="sizes">
+          <button class="size active" onclick="selectSize(this,'S')">S</button>
+          <button class="size" onclick="selectSize(this,'M')">M</button>
+          <button class="size" onclick="selectSize(this,'L')">L</button>
+          <button class="size" onclick="selectSize(this,'XL')">XL</button>
+          <button class="size" onclick="selectSize(this,'XXL')">XXL</button>
+        </div>
+
+        <div class="option-title">Quantity</div>
+        <div class="qty-box">
+          <button onclick="changeQty(-1)">−</button>
+          <b id="qty">1</b>
+          <button onclick="changeQty(1)">+</button>
+        </div>
+
+        <div class="button-row">
+          <button class="btn" onclick="buyNowProduct()">Buy Now</button>
+          <button class="btn btn-secondary" onclick="addProductToCart()">Add to Cart</button>
+        </div>
+
+        <div class="trust-grid">
+          <div class="trust">Premium Cotton</div>
+          <div class="trust">Oversized Fit</div>
+          <div class="trust">High Quality Print</div>
+          <div class="trust">Secure Checkout</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="section">
+      <h3>Product Details</h3>
+      <p>
+        Fit: Oversized fit<br>
+        Fabric: Premium cotton<br>
+        Print: High-quality long-lasting print<br>
+        Delivery: 4–7 days across India<br>
+        Payment: Cash on Delivery / Online payment placeholder
+      </p>
+    </div>
+
+    <div class="section">
+      <h3>Size Chart</h3>
+      <p>
+        S, M, L, XL, XXL available. Choose your regular size for relaxed oversized fit.
+      </p>
+    </div>
+
+    <div class="section">
+      <h3>FAQ</h3>
+      <p>
+        COD is available on selected orders. Our team will call you for confirmation after order placement.
+      </p>
+    </div>
+    <section class="more-products-section">
+  <h2>More Products</h2>
+  <div id="moreProducts"></div>
+</section>
+  </main>
+
+  <aside class="cart-drawer" id="cartDrawer">
+    <div class="cart-head">
+      <h2>Your Cart</h2>
+      <button class="close" onclick="toggleCart()">✕</button>
+    </div>
+
+    <div id="cartItems"></div>
+
+    <div class="cart-total">
+      <span>Total</span>
+      <span id="cartTotal">₹0</span>
+    </div>
+
+    <a href="trend_clout_premium_index.html#checkout" class="btn" onclick="toggleCart()">Go to Checkout</a>
+    <a href="checkout.html" class="btn" onclick="toggleCart()">Go to Checkout</a>
+  </aside>
+  <script src="Product.js"></script>
+
+  <script>
+
+    let cart = JSON.parse(localStorage.getItem("trendCloutCart")) || [];
+    let selectedSize = "S";
+    let quantity = 1;
+    let currentProduct = null;
+
+    const params = new URLSearchParams(window.location.search);
+    const productId = Number(params.get("id")) || 0;
+
+    if(products[productId]){
+      currentProduct = products[productId];
+
+      document.getElementById("productName").innerText = currentProduct.name;
+      document.getElementById("productPrice").innerText = "₹" + currentProduct.price;
+      document.getElementById("productImage").src = currentProduct.img;
+      document.getElementById("productDescription").innerText = currentProduct.description;
+      document.title = currentProduct.name + " | Trend Clout";
+    } else {
+      document.querySelector(".details").innerHTML = "<h1>Product not found</h1><p>Please go back to collection.</p>";
+    }
+
+    function selectSize(btn,size){
+      selectedSize = size;
+      document.querySelectorAll(".size").forEach(s => s.classList.remove("active"));
+      btn.classList.add("active");
+    }
+
+    function changeQty(num){
+      quantity += num;
+      if(quantity < 1) quantity = 1;
+      document.getElementById("qty").innerText = quantity;
+    }
+
+    function addProductToCart(){
+      if(!currentProduct){
+        alert("Product not found.");
+        return;
+      }
+
+      cart.push({
+        name:currentProduct.name,
+        price:currentProduct.price,
+        category:currentProduct.category,
+        img:currentProduct.img,
+        size:selectedSize,
+        qty:quantity
+      });
+
+      localStorage.setItem("trendCloutCart", JSON.stringify(cart));
+      renderCart();
+      toggleCart();
+    }
+
+    function buyNowProduct(){
+      if(!currentProduct){
+        alert("Product not found.");
+        return;
+      }
+
+      cart.push({
+        name:currentProduct.name,
+        price:currentProduct.price,
+        category:currentProduct.category,
+        img:currentProduct.img,
+        size:selectedSize,
+        qty:quantity
+      });
+
+      localStorage.setItem("trendCloutCart", JSON.stringify(cart));
+      window.location.href = "checkout-2.html";
+    }
+
+    function renderCart(){
+      const box = document.getElementById("cartItems");
+      const count = document.getElementById("cartCount");
+      const total = document.getElementById("cartTotal");
+
+      box.innerHTML = "";
+      let sum = 0;
+
+      if(cart.length === 0){
+        box.innerHTML = "<p style='color:#aaa'>Your cart is empty.</p>";
+      }
+
+      cart.forEach((item,index)=>{
+        sum += item.price * item.qty;
+
+        box.innerHTML += `
+          <div class="cart-item">
+            <img src="${item.img}" alt="${item.name}">
+            <div>
+              <h4>${item.name}</h4>
+              <p>Size: ${item.size} • Qty: ${item.qty}</p>
+              <p>₹${item.price * item.qty}</p>
+              <button class="remove" onclick="removeItem(${index})">Remove</button>
+            </div>
+          </div>
+        `;
+      });
+
+      count.innerText = cart.length;
+      total.innerText = "₹" + sum;
+    }
+
+    function removeItem(index){
+      cart.splice(index,1);
+      localStorage.setItem("trendCloutCart", JSON.stringify(cart));
+      renderCart();
+    }
+
+    function toggleCart(){
+      document.getElementById("cartDrawer").classList.toggle("open");
+    }
+
+    window.addEventListener("load", ()=>{
+      const pageTransition = document.getElementById("pageTransition");
+      if(pageTransition){
+        pageTransition.classList.add("hide");
+      }
+    });
+
+    const cursorGlow = document.getElementById("cursorGlow");
+    document.addEventListener("mousemove", (e)=>{
+      if(cursorGlow){
+        cursorGlow.style.left = e.clientX + "px";
+        cursorGlow.style.top = e.clientY + "px";
+      }
+    });
+
+    renderCart();
+    function renderMoreProducts(){
+  const box = document.getElementById("moreProducts");
+
+  if(!box) return;
+
+  // remove current product (so it doesn't repeat)
+  const filtered = products.filter(p => p.name !== currentProduct.name);
+
+  // take first 5 products
+  const show = filtered.slice(0,5);
+
+  box.innerHTML = show.map(p => `
+    <a href="product-1.html" class="more-card">
+      <img src="${p.img}">
+      <h3>${p.name}</h3>
+      <p>₹${p.price}</p>
+    </a>
+  `).join("");
+}
+renderMoreProducts();
+  </script>
+</body>
+</html>
