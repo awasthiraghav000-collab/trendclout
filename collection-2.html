@@ -1,0 +1,508 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <title>All Drops | Trend Clout</title>
+
+  <style>
+    :root{
+      --bg:#070613;
+      --panel:rgba(255,255,255,.075);
+      --panel2:rgba(255,255,255,.045);
+      --text:#ffffff;
+      --muted:#c9c2d8;
+      --line:rgba(255,255,255,.15);
+      --accent:#ff8bbd;
+      --accent2:#8ddcff;
+      --green:#7CFFB2;
+    }
+
+    *{margin:0;padding:0;box-sizing:border-box}
+
+    body{
+      min-height:100vh;
+      color:white;
+      font-family: Georgia, "Times New Roman", serif;
+      overflow-x:hidden;
+      background:
+        radial-gradient(circle at top left, rgba(255,139,189,.28), transparent 30%),
+        radial-gradient(circle at top right, rgba(141,220,255,.18), transparent 34%),
+        linear-gradient(180deg,#090719 0%, #070613 55%, #05050c 100%);
+    }
+
+    a{text-decoration:none;color:inherit}
+    img{display:block;max-width:100%}
+
+    header{
+      position:sticky;
+      top:0;
+      z-index:50;
+      background:rgba(7,6,19,.78);
+      backdrop-filter:blur(18px);
+      border-bottom:1px solid var(--line);
+    }
+
+    nav{
+      max-width:1180px;
+      margin:auto;
+      padding:18px;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+    }
+
+    .logo{
+      display:flex;
+      align-items:center;
+      gap:14px;
+      font-size:30px;
+      font-weight:700;
+    }
+
+    .logo-mark{
+      width:54px;
+      height:54px;
+      border-radius:18px;
+      background:linear-gradient(135deg,var(--accent),var(--accent2));
+      box-shadow:0 0 36px rgba(255,139,189,.45);
+      flex:none;
+    }
+
+    .nav-link{
+      padding:12px 18px;
+      border-radius:999px;
+      border:1px solid var(--line);
+      background:rgba(255,255,255,.06);
+      font-size:17px;
+    }
+
+    .wrap{
+      max-width:1180px;
+      margin:auto;
+      padding:32px 18px 80px;
+    }
+
+    .hero{
+      position:relative;
+      overflow:hidden;
+      padding:44px 34px;
+      border-radius:34px;
+      border:1px solid rgba(255,255,255,.16);
+      background:
+        linear-gradient(100deg, rgba(255,139,189,.20), rgba(141,220,255,.14)),
+        repeating-linear-gradient(90deg, rgba(255,255,255,.055) 0 16px, transparent 16px 36px);
+      box-shadow:0 32px 80px rgba(0,0,0,.38);
+      margin-bottom:30px;
+    }
+
+    .hero::after{
+      content:"";
+      position:absolute;
+      inset:-40%;
+      background:linear-gradient(120deg, transparent, rgba(255,255,255,.12), transparent);
+      transform:rotate(15deg);
+      animation:shine 5s infinite;
+    }
+
+    @keyframes shine{
+      0%{translate:-60% 0}
+      55%,100%{translate:60% 0}
+    }
+
+    .hero > *{position:relative;z-index:2}
+
+    .tag{
+      display:inline-block;
+      padding:11px 18px;
+      border-radius:999px;
+      border:1px solid rgba(124,255,178,.45);
+      background:rgba(124,255,178,.12);
+      color:#d6ffe5;
+      font-size:18px;
+      margin-bottom:20px;
+    }
+
+    h1{
+      font-size:clamp(48px,9vw,88px);
+      line-height:.95;
+      letter-spacing:-2px;
+      margin-bottom:18px;
+    }
+
+    .hero p{
+      color:#e3ddec;
+      font-size:22px;
+      line-height:1.6;
+      max-width:760px;
+    }
+
+    .filters{
+      display:flex;
+      gap:14px;
+      flex-wrap:wrap;
+      margin:30px 0;
+    }
+
+    .filter-btn{
+      border:1px solid var(--line);
+      background:rgba(255,255,255,.06);
+      color:white;
+      padding:14px 26px;
+      border-radius:999px;
+      font-size:18px;
+      font-family:inherit;
+      cursor:pointer;
+      transition:.25s ease;
+    }
+
+    .filter-btn.active,
+    .filter-btn:hover{
+      background:white;
+      color:#070613;
+      transform:translateY(-2px);
+    }
+
+    .grid{
+      display:grid;
+      grid-template-columns:repeat(3,1fr);
+      gap:28px;
+    }
+
+    .card{
+      position:relative;
+      overflow:hidden;
+      border-radius:34px;
+      padding:24px;
+      min-height:560px;
+      background:
+        radial-gradient(circle at 80% 10%, rgba(255,139,189,.20), transparent 35%),
+        linear-gradient(180deg, rgba(255,255,255,.095), rgba(255,255,255,.035));
+      border:1px solid rgba(255,255,255,.16);
+      box-shadow:0 28px 80px rgba(0,0,0,.35);
+      display:flex;
+      flex-direction:column;
+      transition:.35s ease;
+    }
+
+    .card:hover{
+      transform:translateY(-7px);
+      box-shadow:0 36px 95px rgba(0,0,0,.55);
+    }
+
+    .label{
+      position:absolute;
+      top:22px;
+      left:22px;
+      z-index:4;
+      padding:9px 15px;
+      border-radius:999px;
+      background:rgba(0,0,0,.46);
+      border:1px solid rgba(255,255,255,.16);
+      font-size:15px;
+      color:#f2edf8;
+    }
+
+    .imgbox{
+      height:340px;
+      border-radius:28px;
+      background:
+        radial-gradient(circle at center, rgba(255,255,255,.10), transparent 55%),
+        rgba(255,255,255,.04);
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      overflow:hidden;
+      margin-bottom:22px;
+    }
+
+    .imgbox img{
+      width:100%;
+      height:100%;
+      object-fit:contain;
+      filter:drop-shadow(0 26px 36px rgba(0,0,0,.72));
+      transition:.45s ease;
+    }
+
+    .card:hover img{
+      transform:scale(1.07) translateY(-8px);
+    }
+
+    .info{
+      flex:1;
+      display:flex;
+      flex-direction:column;
+      justify-content:space-between;
+      gap:18px;
+    }
+
+    .info h3{
+      font-size:32px;
+      line-height:1.12;
+      letter-spacing:-.8px;
+    }
+
+    .info p{
+      color:var(--muted);
+      font-size:18px;
+      line-height:1.5;
+    }
+
+    .price-row{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:14px;
+    }
+
+    .price{
+      color:var(--accent2);
+      font-size:34px;
+      font-weight:700;
+    }
+
+    .add{
+      padding:15px 22px;
+      border-radius:999px;
+      background:white;
+      color:#070613;
+      font-size:18px;
+      white-space:nowrap;
+      transition:.25s ease;
+    }
+
+    .add:hover{
+      background:linear-gradient(135deg,var(--accent),var(--accent2));
+      transform:translateY(-2px);
+    }
+
+    .empty{
+      display:none;
+      padding:28px;
+      border-radius:26px;
+      background:var(--panel);
+      border:1px solid var(--line);
+      color:var(--muted);
+      font-size:20px;
+    }
+
+    footer{
+      margin-top:55px;
+      padding:34px 18px;
+      text-align:center;
+      color:var(--muted);
+      border-top:1px solid var(--line);
+      font-size:17px;
+    }
+
+    @media(max-width:950px){
+      .grid{grid-template-columns:repeat(2,1fr)}
+    }
+
+    @media(max-width:650px){
+      nav{padding:16px}
+      .logo{font-size:28px}
+      .logo-mark{width:58px;height:58px}
+      .nav-link{display:none}
+      .wrap{padding:28px 14px 70px}
+      .hero{padding:34px 26px;border-radius:30px}
+      .hero p{font-size:22px}
+      .filters{gap:14px}
+      .filter-btn{font-size:18px;padding:14px 24px}
+      .grid{grid-template-columns:1fr;gap:24px}
+      .card{min-height:auto;padding:24px;border-radius:34px}
+      .imgbox{height:380px}
+      .info h3{font-size:34px}
+      .price-row{align-items:flex-end}
+      .price{font-size:34px}
+      .add{font-size:18px;padding:15px 24px}
+    }
+  </style>
+</head>
+
+<body>
+
+  <header>
+    <nav>
+      <a href="index.html" class="logo">
+        <span class="logo-mark"></span>
+        Trend Clout
+      </a>
+
+      <a href="index.html#shop" class="nav-link">Back to Shop</a>
+    </nav>
+  </header>
+
+  <main class="wrap">
+    <section class="hero">
+      <div class="tag" id="collectionTag">All Products</div>
+      <h1 id="collectionTitle">All Drops</h1>
+      <p id="collectionText">Explore every premium oversized tee from Trend Clout.</p>
+    </section>
+
+    <div class="filters">
+      <button class="filter-btn active" onclick="setFilter('all', this)">All</button>
+      <button class="filter-btn" onclick="setFilter('cars', this)">Cars</button>
+      <button class="filter-btn" onclick="setFilter('creator', this)">Creator</button>
+      <button class="filter-btn" onclick="setFilter('streetwear', this)">Streetwear</button>
+      <button class="filter-btn" onclick="setFilter('motivation', this)">Motivation</button>
+      <button class="filter-btn" onclick="setFilter('power', this)">Power</button>
+    </div>
+
+    <section class="grid" id="productGrid"></section>
+
+    <div class="empty" id="emptyState">No products found in this collection yet.</div>
+  </main>
+
+  <footer>
+    Trend Clout • COD Available • 4–7 Day Delivery
+  </footer>
+
+  <script src="Product.js"></script>
+
+  <script>
+    const fallbackProducts = [
+      {
+        name:"Bugatti Chiron Tee",
+        price:1299,
+        category:"cars",
+        label:"Cars",
+        img:"Photos/1000016651.png",
+        productPage:"product-1.html"
+      },
+      {
+        name:"Children's First Love Tee",
+        price:1399,
+        category:"cars",
+        label:"Cars",
+        img:"Photos/1000016652.png",
+        productPage:"product-1.html"
+      },
+      {
+        name:"Creator Mode Tee",
+        price:1299,
+        category:"creator",
+        label:"Creator",
+        img:"Photos/1000016651.png",
+        productPage:"product-1.html"
+      },
+      {
+        name:"Marvel Edition Tee",
+        price:1699,
+        category:"power",
+        label:"Power",
+        img:"Photos/1000007145 (1).png",
+        productPage:"product-1.html"
+      }
+    ];
+
+    const allProducts =
+      (typeof products !== "undefined" && Array.isArray(products) && products.length > 0)
+      ? products
+      : fallbackProducts;
+
+    const params = new URLSearchParams(window.location.search);
+    let activeFilter = params.get("type") || "all";
+
+    function cleanLabel(product){
+      return product.label || product.category || "Drop";
+    }
+
+    function renderProducts(){
+      const grid = document.getElementById("productGrid");
+      const empty = document.getElementById("emptyState");
+
+      grid.innerHTML = "";
+
+      const filtered = activeFilter === "all"
+        ? allProducts
+        : allProducts.filter(p => (p.category || "").toLowerCase() === activeFilter);
+
+      if(filtered.length === 0){
+        empty.style.display = "block";
+        return;
+      }
+
+      empty.style.display = "none";
+
+      filtered.forEach((p)=>{
+        const index = allProducts.indexOf(p);
+        const page = p.productPage || "product-1.html";
+        const name = p.name || "Trend Clout Tee";
+        const price = p.price || 1299;
+        const image = p.img || "Photos/1000016651.png";
+        const label = cleanLabel(p);
+
+        grid.innerHTML += `
+          <article class="card">
+            <span class="label">${label}</span>
+
+            <div class="imgbox">
+              <img src="${image}" alt="${name}">
+            </div>
+
+            <div class="info">
+              <div>
+                <h3>${name}</h3>
+                <p>Oversized fit • Premium cotton • COD available</p>
+              </div>
+
+              <div class="price-row">
+                <div class="price">₹${price}</div>
+                <a class="add" href="${page}?id=${index}">View Product</a>
+              </div>
+            </div>
+          </article>
+        `;
+      });
+    }
+
+    function setFilter(type, btn){
+      activeFilter = type;
+
+      document.querySelectorAll(".filter-btn").forEach(b => b.classList.remove("active"));
+      btn.classList.add("active");
+
+      updateHero(type);
+      renderProducts();
+    }
+
+    function updateHero(type){
+      const title = document.getElementById("collectionTitle");
+      const tag = document.getElementById("collectionTag");
+      const text = document.getElementById("collectionText");
+
+      const data = {
+        all:["All Drops","All Products","Explore every premium oversized tee from Trend Clout."],
+        cars:["Cars Collection","Cars","Car culture inspired oversized tees made for bold streetwear lovers."],
+        creator:["Creator Collection","Creator","Clean creator-style oversized tees for builders and young creators."],
+        streetwear:["Streetwear Collection","Streetwear","Premium streetwear designs for everyday bold looks."],
+        motivation:["Motivation Collection","Motivation","Wear the mindset. Built for ambition and confidence."],
+        power:["Power Collection","Power","Strong graphic tees with bold character and presence."]
+      };
+
+      const selected = data[type] || data.all;
+      title.innerText = selected[0];
+      tag.innerText = selected[1];
+      text.innerText = selected[2];
+      document.title = selected[0] + " | Trend Clout";
+    }
+
+    function activateFilterButton(){
+      document.querySelectorAll(".filter-btn").forEach(btn => {
+        btn.classList.toggle("active", btn.innerText.toLowerCase() === activeFilter);
+      });
+
+      if(activeFilter === "all"){
+        document.querySelectorAll(".filter-btn")[0].classList.add("active");
+      }
+    }
+
+    updateHero(activeFilter);
+    activateFilterButton();
+    renderProducts();
+  </script>
+
+</body>
+</html>
